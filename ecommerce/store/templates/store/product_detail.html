@@ -1,0 +1,53 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <img class="thumbnail" src="{{ product.imageURL }}">
+        </div>
+        <div class="col-lg-6">
+            <h2><strong>{{ product.name }}</strong></h2>
+            <p>{{ product.description }}</p>
+            <h4><strong>Ksh. {{ product.price | floatformat:2 }}</strong></h4>
+            <!-- Add additional images here -->
+            <hr>
+            <div class="additional-images">
+                {% for additional_image in product.images.all %}
+                    <img class="product-image additional-image" src="{{ additional_image.image.url }}" alt="{{ product.name }} Image">
+                {% endfor %}
+            </div>
+            <a href="#" class="btn btn-outline-secondary add-btn update-cart" data-product="{{ product.id }}" data-action="add">Add to Cart</a>
+        </div>
+    </div>
+</div>
+<style>
+    /* Additional styling for product detail page */
+    .btn{
+        margin-top: 10px;
+    }
+    .additional-images {
+        display: flex;
+        margin-top: 20px;
+        overflow-x: auto; /* Enable horizontal scrolling for additional images */
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+        margin-top: 20px;
+    }
+
+    /*.main-image {
+        /* Add any additional styling specific to the main product image 
+    }*/
+
+    .additional-image {
+        /* Add any additional styling specific to additional images */
+        margin-right: 10px;
+        max-width: 100%; /* Ensure images don't exceed container width */
+        height: auto; /* Maintain aspect ratio */
+    }
+</style>
+{% endblock content %}
