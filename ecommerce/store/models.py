@@ -444,7 +444,7 @@ class Order(models.Model):
         shipping = False
         orderitems = self.orderitem_set.all()
         for i in orderitems:
-            if i.product.digital == False:
+            if i.product and i.product.digital == False:
                 shipping = True
         return shipping
     
@@ -461,15 +461,26 @@ class Order(models.Model):
         return total
     
 class OrderItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True) # new
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True) # new
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
 
     @property
-    def get_total(self): # new
+    def get_total(self):
+        # Handle case where product is None
+        if self.product is None:
+            return 0
+        
+        # Calculate total
         total = self.product.price * self.quantity
         return total
+    
+    @property
+    def product_name(self):
+        if self.product is None:
+            return 'Deleted'
+        return self.product.name
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True) # new
@@ -485,39 +496,3 @@ class ShippingAddress(models.Model):
             return self.address
         else:
             return f"ShippingAddress #{self.id} (No address provided)"
-
-class Details(models.Model):
-    country = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True) # new
-    state = models.CharField(max_length=200, null=True)
-    city = models.CharField(max_length=200, null=True)
-    zipcode = models.CharField(max_length=200, null=True) # new
-    date_created = models.DateTimeField(auto_now_add=True, null=True) # new
-    
-
-    def __str__(self):
-        # Return the name of the customer if available
-        if self.name:
-            return self.name
-
-"""class Country(models.Model):
-    name = models.CharField(max_length=40)
-
-    def __str__(self):
-        return self.name
-
-
-class City(models.Model):
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    name = models.CharField(max_length=40)
-
-    def __str__(self):
-        return self.name
-
-
-class Person(models.Model):
-    name = models.CharField(max_length=124)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True)
-
-    def __str__(self):
-        return self.name"""

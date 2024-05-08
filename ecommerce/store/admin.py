@@ -34,29 +34,15 @@ class ShippingAddressAdmin(admin.ModelAdmin):
 
 class ImageInline(admin.TabularInline):
     model = Image
-    extra = 1  # You can adjust this to control the number of inline forms displayed
+    extra = 1
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ImageInline]
 
-'''class PersonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'city')
 
-    def delete_selected(self, request, queryset):
-        empty_name_persons = queryset.filter(name='')
-        empty_name_persons.delete()
-        self.message_user(request, f"{empty_name_persons.count()} persons with empty names deleted.")'''
-
-#admin.site.register(Product, ProductAdmin)
 admin.site.register(Image)
-
-
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 admin.site.register(ShippingAddress, ShippingAddressAdmin)
-#.site.register(Details)
-#admin.site.register(City)
-#admin.site.register(Country)
-#admin.site.register(Person, PersonAdmin)

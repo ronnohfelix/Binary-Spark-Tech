@@ -12,9 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Q
-# Create your views here.
 
-#@unauthenticated_user
 def registerPage(request):
         form = CreateUserForm()
         if request.method == 'POST':
@@ -37,7 +35,6 @@ def registerPage(request):
         context = {'form':form}
         return render(request, 'store/signup.html', context)
 
-#@unauthenticated_user
 def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -194,132 +191,3 @@ def product_detail(request, product_id):
     }
     
     return render(request, 'store/product_detail.html', context)
-
-#def details(request):
-    # You can pass any context variables to the template if needed
- #   context = {}
- #   return render(request, 'store/details.html', context)
-
-'''def details(request):
-    if request.method == 'POST':
-        form = Details(request.POST)
-       # if form.is_valid():
-        form.save()  # Save the shipping address to the database
-            #messages.success(request, "Shipping information submitted successfully!")
-           # return redirect('some_redirect_url')  # Redirect the user to another page
-        #else:
-        #    messages.error(request, "There was an error with your submission. Please try again.")
-    
-    else:
-        form = Details()
-
-    # Render a template with the form, if necessary
-    return render(request, 'store/details.html', {'form': form})
-
-from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
-
-from .forms import PersonCreationForm
-from .models import Person, City
-
-
-def person_create_view(request):
-    form = PersonCreationForm()
-    if request.method == 'POST':
-        form = PersonCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('person_add')
-    return render(request, 'store/home.html', {'form': form})
-
-
-def person_update_view(request, pk):
-    person = get_object_or_404(Person, pk=pk)
-    form = PersonCreationForm(instance=person)
-    if request.method == 'POST':
-        form = PersonCreationForm(request.POST, instance=person)
-        if form.is_valid():
-            form.save()
-            return redirect('person_change', pk=pk)
-    return render(request, 'store/home.html', {'form': form})
-
-
-# AJAX
-def load_cities(request):
-    country_id = request.GET.get('country_id')
-    cities = City.objects.filter(country_id=country_id).all()
-    return render(request, 'store/city_dropdown_list_options.html', {'cities': cities})
-    # return JsonResponse(list(cities.values('id', 'name')), safe=False)'''
-
-#def signin_view(request):
- #   if request.method == 'POST':
-  #      email = request.POST['email']
-  #      password = request.POST['password']
-
-  #      user = auth.authenticate(request, username=email, password=password)
-  #      if user is not None:
-  #          auth.login(request, user)
-  #          messages.success(request, "Welcome back!")
-   #         request.session['username'] = user.username
-   #         return redirect('store')
-   #     else:
-   #         messages.error(request, "Invalid credentials")
-   #         return redirect('signin')
-
-   # return render(request, 'store/signin.html')
-
-
-#def signup_view(request):
-   # if request.method == 'POST':
-   #     full_name = request.POST['full_name']
-   #     email = request.POST['email']
-    #    password1 = request.POST['password1']
-    #    password2 = request.POST['password2']
-
-    #    if password1 != password2:
-    #        messages.error(request, "Passwords do not match.")
-    #        return redirect('signup')  # Redirect back to the sign-up page
-
-     #   # Check if a user with the given email already exists
-     #   if User.objects.filter(email=email).exists():
-     #       messages.error(request, "An account with this email already exists.")
-     #       return redirect('signup')
-
-        # Create the user account
-      #  user = User.objects.create_user(username=email, email=email, password=password1)
-       # user.full_name = full_name
-       # user.save()
-
-        # Create associated Customer instance
-       # customer = Customer(user=user)
-       # customer.save()
-        
-       # messages.success(request, "Account created successfully. You can now sign in.")
-       # return redirect('signin')  # Redirect to the sign-in page
-#
-   # return render(request, 'store/signup.html')
-
-#def logout_view(request):
- #   logout(request)
- #   if 'username' in request.session:
- #       del request.session['username']
-  #  return redirect('store') 
-
-#def search_view(request):
-#    query = request.GET.get('q')
-#    results = []
- #   cartItems = 0  # Initialize cartItems here
-#
- #   if query:
-  #      data = cartData(request)
-  #      cartItems = data['cartItems']
-  #      results = Product.objects.filter(name__icontains=query)
-#
- #   context = {
-  #      'results': results,
- #       'cartItems': cartItems  # Include cartItems in the context
- #   }
-
-  #  return render(request, 'store/search_results.html', context)
-
-

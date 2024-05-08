@@ -127,19 +127,3 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/images/' # new
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-MPESA_ENVIRONMENT = 'sandbox' # new
-
-MPESA_CONSUMER_KEY = 'your-consumer-key' # new
-MPESA_CONSUMER_SECRET = 'your-consumer-secret' # new
-MPESA_SHORTCODE = 'your-shortcode' # new
-MPESA_EXPRESS_SHORTCODE = 'your-express-shortcode' # new
-MPESA_SHORTCODE_TYPE = 'paybill' # new
-MPESA_PASSKEY = 'your-passkey' # new
-MPESA_INITIATOR_USERNAME = 'testapi' # new
-MPESA_SECURITY_CREDENTIAL = 'Safaricom999!*!' # new
