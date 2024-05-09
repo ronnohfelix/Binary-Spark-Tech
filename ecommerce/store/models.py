@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -406,8 +407,8 @@ class Customer(models.Model):
     
 class Product(models.Model):
     name = models.CharField(max_length=200, null=True)
-    description = models.CharField(max_length=200, null=True, blank=True) # new
-    price = models.DecimalField(max_digits=7, decimal_places=2) # new
+    description = RichTextField(null=True, blank=True) # new
+    price = models.DecimalField(max_digits=8, decimal_places=0) # new
     digital = models.BooleanField(default=False, null=True, blank=False) # new
     image = models.ImageField(null=True, blank=True) # new
     additional_images = models.ManyToManyField('Image', related_name='additional_images', blank=True) # new

@@ -8,8 +8,8 @@
         </div>
         <div class="col-lg-6">
             <h2><strong>{{ product.name }}</strong></h2>
-            <p>{{ product.description }}</p>
-            <h4><strong>Ksh. {{ product.price | floatformat:2 }}</strong></h4>
+            <p>{{ product.description|safe }}</p>
+            <h4><strong>Ksh. {{ product.price}}</strong></h4>
             <!-- Add additional images here -->
             <hr>
             <div class="additional-images">

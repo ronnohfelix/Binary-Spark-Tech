@@ -1,5 +1,6 @@
 body{
-	background-color: hsl(256, 74%, 82%);
+	/*background-color: hsl(256, 74%, 82%);*/
+    background-color: white;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -7,30 +8,33 @@ h1,h2,h3,h4,h5,h6{
 }
 
 h4{
-    font-size: 20px;
+    font-size: 18px;
 }
 
 @media (max-width: 768px) {
     h4{
-        font-size: 20px;
+        font-size: 15px;
     }
     
 }
 
 .box-element{
-	box-shadow:hsl(0, 0%, 80%) 0 0 16px;
+	box-shadow:hsl(39, 92%, 47%) 0 0 16px;
 	background-color: #fff;
 	border-radius: 4px;
 	padding: 10px;
     margin-bottom: 30px;
+    width: 100%;
+	height: 130px;
 }
 
 .thumbnail{
 	width: 100%;
-	height: 200px;
-	-webkit-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+	height: 250px;
+	-webkit-box-shadow: -1px -3px 5px -2px rgb(214, 214, 214);
     -moz-box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
-    box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);
+    /*box-shadow: -1px -3px 5px -2px rgba(214,214,214,1);*/
+    box-shadow: -1px -3px 5px -2px rgb(245, 140, 4);
 }
 
 .product{
