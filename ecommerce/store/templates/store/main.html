@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+
 <head>
-	<title>Binary Spark Tech</title>
+    <title>Binary Spark Tech</title>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -36,84 +38,168 @@
             }
             return cookieValue;
         }
-    var csrftoken = getToken('csrftoken');
+        var csrftoken = getToken('csrftoken');
 
-    function getCookie(name) {
-        var cookieArr = document.cookie.split(";");
+        function getCookie(name) {
+            var cookieArr = document.cookie.split(";");
 
-        for(var i = 0; i < cookieArr.length; i++) {
-            var cookiePair = cookieArr[i].split("=");
+            for (var i = 0; i < cookieArr.length; i++) {
+                var cookiePair = cookieArr[i].split("=");
 
-            if(name == cookiePair[0].trim()) {
-                return decodeURIComponent(cookiePair[1]);
+                if (name == cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
             }
+
+            return null;
         }
 
-        return null;
-    }
+        var cart = JSON.parse(getCookie('cart'));
+        if (cart == undefined) {
+            cart = {}
+            console.log('Cart created!')
+            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+        }
 
-    var cart = JSON.parse(getCookie('cart'));
-    if(cart == undefined){
-        cart = {}
-        console.log('Cart created!')
-        document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
-    }
-
-    console.log('Cart:', cart)
+        console.log('Cart:', cart)
     </script>
 
 </head>
+
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'store' %}">Binary Spark Tech</a>
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	  <a class="navbar-brand" href="{% url 'store' %}">Binary Spark Tech</a>
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	    <span class="navbar-toggler-icon"></span>
-	  </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <ul class="navbar-nav mr-auto">
-	      <li class="nav-item active">
-	 
-	    </ul>
-	    <div class="form-inline my-2 my-lg-0">
-          {% if not request.user.is_authenticated %}
-          <a href="{% url 'login' %}" class="btn btn-warning login">LOGIN</a>
-          <a href="{% url 'register' %}" class="btn btn-warning register">REGISTER</a>
-          {% else %}
+        <div class="form-inline my-2 my-lg-0">
+            {% if not request.user.is_authenticated %}
+            <a href="{% url 'login' %}" class="btn btn-warning login">LOGIN</a>
+            <a href="{% url 'register' %}" class="btn btn-warning register">REGISTER</a>
+            {% else %}
             {% block account %}
-
             <a class="hello-msg" href="{% url 'account' %}">
                 <strong><i class="fas fa-user"></i></strong>
             </a>
-            <style>
-    /* Style the FontAwesome user icon */
-           .hello-msg .fas.fa-user {
-            font-size: 1.4em; /* Adjust the font-size as needed */
-           }
-           </style>
-            
-        </a>
-        {% endblock account %}
-        
-          {% endif %}
-	     	
-	     	<a href="{% url 'cart' %}">
-	    		<img  id="cart-icon" src="{% static 'images/cart.png' %}">
-	    	</a>
-	    	<p id="cart-total">{{cartItems}}</p>
+            {% endblock account %}
+            {% endif %}
 
-	    </div>
-	  </div>
-	</nav>
+            <a href="{% url 'cart' %}">
+                <img id="cart-icon" src="{% static 'images/cart.png' %}">
+            </a>
+            <p id="cart-total">{{cartItems}}</p>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-     <div class="container">
-            <br>
-            {% block content %}
+    <style>
+        /* Styles for normal screens (larger than 880px) */
+        @media (min-width: 881px) {
+
+            /* Align form-inline container to the right */
+            .form-inline {
+                margin-left: auto;
+                /* Push to the right */
+                display: flex;
+                align-items: center;
+            }
+
+            /* Style login, register, and cart icon */
+            .login,
+            .register,
+            #cart-icon,
+            .hello-msg {
+                margin-left: 10px;
+                /* Add spacing between elements */
+                font-size: 1.5em;
+                /* Adjust font size as needed */
+            }
+
+            /* Adjust the size of the cart icon */
+            #cart-icon {
+                width: 24px;
+                /* Adjust width as needed */
+                height: 24px;
+                /* Adjust height as needed */
+            }
+        }
+
+        /* Media query for screens with a max width of 880px */
+        @media (max-width: 880px) {
+            .navbar-brand{
+                font-size: 1em;
+
+            }
+
+            /* Move login, cart icon, and logout buttons next to the navbar brand */
+            .navbar .form-inline {
+                position: absolute;
+                /* Position them next to the brand */
+                right: 10px;
+                /* Align them to the right side of the navbar */
+                top: 0;
+                /* Align them to the top */
+                display: flex;
+                /* Align items side by side */
+                align-items: center;
+                justify-content: flex-end;
+                /* Align to the right */
+                margin-right: 10px;
+                /* Add margin for spacing */
+            }
+
+            .navbar-toggler {
+                display: none;
+            }
+
+            /* Adjust size of the cart icon */
+            #cart-icon {
+                width: 20px;
+                /* Adjust width */
+                height: 20px;
+                /* Adjust height */
+                margin-left: 10px;
+                /* Add space between icon and text */
+            }
+
+            #cart-total {
+                margin-left: 5px;
+                /* Add space between cart icon and total */
+                font-size: 0.8em;
+                /* Adjust font size as needed */
+            }
+
+            /* Adjust the spacing of the other elements */
+            .hello-msg {
+                margin-left: 10px;
+                font-size: 1.5em;
+                /* Add spacing between elements */
+            }
+        }
+
+        .login,
+        .register {
+            margin-left: 10px;
+            font-size: 0.5em;
+            /* Add spacing between elements */
+        }
+    </style>
+
+    <div class="container">
+        <br>
+        {% block content %}
 
 
-            {% endblock content %}
-         </div>
+        {% endblock content %}
+    </div>
 
     {% block footer %}
 
@@ -139,10 +225,6 @@
                 <a href="https://twitter.com/Rono91009749"><i class="fa fa-twitter"></i></a>
                 <a href="#"><i class="fa fa-youtube"></i></a>
             </div>
-
-            <br>
-
-            <p class="footer-company-name">Copyright © 2024 <strong>Binary Spark Tech</strong> All rights reserved.</p>
         </div>
 
         <div class="footer-center">
@@ -159,55 +241,102 @@
             </div>
             <div>
                 <i class="fa fa-envelope"></i>
-                <p><a href="https://mail.google.com/mail/?view=cm&fs=1&to=binarysparktech77@gmail.com&su=Subject%20Here&body=Email%20body%20here">Email Us</a></p>
+                <p><a
+                        href="https://mail.google.com/mail/?view=cm&fs=1&to=binarysparktech77@gmail.com&su=Subject%20Here&body=Email%20body%20here">Email
+                        Us</a></p>
             </div>
-            <!-- WhatsApp Redirect Link with Icon -->
-            <a class="whatsapp-link" href="https://wa.me/254702514526?text=Hello%20Binary%20Spark%20Tech" target="_blank">
-            <i class="fab fa-whatsapp"></i> WhatsApp Us
-            </a>
-            <style>
-                .whatsapp-link {
-                    display: flex;
-                    align-items: center;
-                    color: #25D366; /* WhatsApp green */
-                    text-decoration: none;
-                    font-weight: bold;
-                    font-size: 1.1em; /* Adjust size as needed */
-                }
-                .whatsapp-link i {
-                    margin-right: 0.5em; /* Add space between the icon and text */
-                }
-                /* Remove underline when hovering over the link */
-               .whatsapp-link:hover {
-                text-decoration: none;
-                color: #25D366;
-                }
-            </style>
-            
+            <div>
+                <!-- WhatsApp Redirect Link with Icon -->
+                <a class="whatsapp-link" href="https://wa.me/254702514526?text=Hello%20Binary%20Spark%20Tech"
+                    target="_blank">
+                    <i class="fab fa-whatsapp"></i> WhatsApp Us</a>
+                <style>
+                    .whatsapp-link {
+                        display: flex;
+                        align-items: center;
+                        color: #25D366;
+                        /* WhatsApp green */
+                        text-decoration: none;
+                        font-weight: bold;
+                        font-size: 1.1em;
+                        /* Adjust size as needed */
+                    }
+
+                    .whatsapp-link i {
+                        margin-right: 0.5em;
+                        /* Add space between the icon and text */
+                    }
+
+                    /* Remove underline when hovering over the link */
+                    .whatsapp-link:hover {
+                        text-decoration: none;
+                        color: #25D366;
+                    }
+
+                    /* Media query for smaller screens */
+                    @media (max-width: 880px) {
+
+                        /* Reduce font size for smaller screens */
+                        .whatsapp-link {
+                            font-size: 1.5em;
+                            display: block;
+
+                        }
+
+                        /* Reduce icon size for smaller screens */
+                        .whatsapp-link i {
+                            font-size: 1.5em;
+                            /* Adjust as needed */
+                        }
+
+                        /* Adjust margin between icon and text */
+                        .whatsapp-link i {
+                            margin-right: 0.3em;
+                        }
+                    }
+                </style>
+
+            </div>
+
 
         </div>
         <div class="footer-right">
             <h3>About Us</h3>
             <p class="footer-company-about">
-                At <strong>Binary Spark Tech</strong>, we're dedicated to enhancing your lifestyle with top-quality electronics. As a leading e-commerce electronics distributor, we offer a wide range of innovative products, from smart home devices to entertainment systems, designed to bring convenience and excitement to your everyday life.
-                
-                Elevate your security with our cutting-edge CCTV and alarm systems. We believe in providing you with peace of mind by offering the latest technology in surveillance and security solutions. Our expert team is committed to delivering exceptional service and reliable products you can trust.
-                
-                Join the Binary Spark Tech community today and experience the future of electronics shopping. Let us be your trusted partner in modernizing your home and keeping it secure.
+                At <strong>Binary Spark Tech</strong>, we're dedicated to enhancing your lifestyle with top-quality
+                electronics. As a leading e-commerce electronics distributor, we offer a wide range of innovative
+                products, from smart home devices to entertainment systems, designed to bring convenience and excitement
+                to your everyday life.
+
+                Elevate your security with our cutting-edge CCTV and alarm systems. We believe in providing you with
+                peace of mind by offering the latest technology in surveillance and security solutions. Our expert team
+                is committed to delivering exceptional service and reliable products you can trust.
+
+                Join the Binary Spark Tech community today and experience the future of electronics shopping. Let us be
+                your trusted partner in modernizing your home and keeping it secure.
             </p>
+            <br>
+            <p class="footer-company-name">Copyright © 2024 <strong>Binary Spark Tech</strong> All rights reserved.</p>
         </div>
     </footer>
 
     {% endblock footer %}
 
 
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
 
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
 
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 
 </body>
+
 </html>
