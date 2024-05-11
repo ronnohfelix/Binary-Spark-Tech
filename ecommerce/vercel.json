@@ -1,14 +1,13 @@
 {
-    "builds": [
-        {
-            "src": "ecommerce/ecommerce/wsgi.py",
+    "builds": [{
+            "src": "Binary-Spark-Tech/ecommerce/ecommerce/wsgi.py",
             "use": "@vercel/python",
             "config": { "maxLambdaSize": "15mb", "runtime": "python3.8" }
         }],
         "routes": [
             {
                 "src": "/(.*)",
-                "dest": "ecommerce/ecommerce/wsgi.py"
+                "dest": "Binary-Spark-Tech/ecommerce/ecommerce/wsgi.py"
             }
         ]   
 }
