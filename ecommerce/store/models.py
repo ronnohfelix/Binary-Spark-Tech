@@ -404,9 +404,20 @@ class Customer(models.Model):
         # Return a generic string if no other information is available
         return 'Unnamed Customer'
 
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'categories'
+
+
     
 class Product(models.Model):
     name = models.CharField(max_length=200, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1) # new
     description = RichTextField(null=True, blank=True) # new
     price = models.DecimalField(max_digits=8, decimal_places=0) # new
     digital = models.BooleanField(default=False, null=True, blank=False) # new

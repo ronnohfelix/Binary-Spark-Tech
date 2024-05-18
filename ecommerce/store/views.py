@@ -13,6 +13,20 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Q
 
+def category(request, cat):
+    cat = cat.replace('-', ' ')
+    
+    try:
+        category = Category.objects.get(name=cat)
+        products = Product.objects.filter(category=category)
+        # Get cart data
+        data = cartData(request)
+        cartItems = data['cartItems']
+        return render(request, 'store/category.html', {'products': products, 'category': category, 'cartItems': cartItems})
+    except:
+        messages.success(request, ('Category does not exist') )
+    return redirect('store')
+
 def registerPage(request):
         form = CreateUserForm()
         if request.method == 'POST':
@@ -74,7 +88,6 @@ def customer(request, pk_test):
     return render(request, 'home/account_settings.html', context)
 
 def store(request):
-
     data = cartData(request)
     cartItems = data['cartItems']
 
@@ -167,7 +180,7 @@ def search_view(request):
         cartItems = data['cartItems']
         
         # Use Q objects to search in both title and description
-        results = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        results = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(category__name__icontains=query))
 
     context = {
         'results': results,
