@@ -19,18 +19,21 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_filter = ['order__customer']
 
     def customer_name(self, obj):
-        return obj.order.customer.name if obj.order.customer else "N/A"
+        order = obj.order
+        if order and order.customer:
+            return order.customer.name
+        return "N/A"
 
     customer_name.short_description = 'Customer Name'
 
 class ShippingAddressAdmin(admin.ModelAdmin):
-    list_display = ['id', 'customer_name', 'address', 'city', 'state', 'zipcode', 'date_added']
-    list_filter = ['customer__name']
+    list_display = ('customer', 'full_name', 'address', 'city', 'state', 'zipcode', 'country')
+    list_filter = ['customer']
 
-    def customer_name(self, obj):
+    def user(self, obj):
         return obj.customer.name if obj.customer else "N/A"
 
-    customer_name.short_description = 'Customer Name'
+    user.short_description = 'Customer Name'
 
 class ImageInline(admin.TabularInline):
     model = Image

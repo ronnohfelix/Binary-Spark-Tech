@@ -20,10 +20,33 @@
             <a href="#" class="btn btn-outline-secondary add-btn update-cart" data-product="{{ product.id }}" data-action="add">Add to Cart</a>
         </div>
     </div>
+    <br>
+    <br>
+    <hr>
+
+    <!-- Related Products Section -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>Related Products</h2>
+            <div class="related-products">
+                {% for related_product in related_products %}
+                    <div class="related-product-item col-lg-3">
+                        <div class="card">
+                            <img src="{{ related_product.imageURL }}" class="card-img-top" alt="{{ related_product.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ related_product.name }}</h5>
+                                <p class="card-text">{{ related_product.price }}</p>
+                                <a href="{% url 'product_detail' related_product.id %}" class="btn btn-primary">View Product</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 <style>
-    /* Additional styling for product detail page */
-    .btn{
+    .btn {
         margin-top: 10px;
     }
     .additional-images {
@@ -39,15 +62,27 @@
         margin-top: 20px;
     }
 
-    /*.main-image {
-        /* Add any additional styling specific to the main product image 
-    }*/
-
     .additional-image {
         /* Add any additional styling specific to additional images */
         margin-right: 10px;
         max-width: 100%; /* Ensure images don't exceed container width */
         height: auto; /* Maintain aspect ratio */
+    }
+
+    /* Related Products Styling */
+    .related-products {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+
+    .related-product-item {
+        margin-bottom: 20px;
+    }
+
+    .card {
+        width: 100%;
+        margin: 10px;
     }
 </style>
 {% endblock content %}

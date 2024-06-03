@@ -480,8 +480,8 @@ class OrderItem(models.Model):
 
     @property
     def get_total(self):
-        # Handle case where product is None
-        if self.product is None:
+        # Handle case where product or order is None
+        if self.product is None or self.order is None:
             return 0
         
         # Calculate total
@@ -494,17 +494,23 @@ class OrderItem(models.Model):
             return 'Deleted'
         return self.product.name
 
+    @property
+    def order_customer(self):
+        if self.order is None or self.order.customer is None:
+            return 'Unknown'
+        return self.order.customer.name  # or whatever attribute you want to display
+
 class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True) # new
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True) # new
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
+    full_name = models.CharField(max_length=200, null=True)
     address = models.CharField(max_length=200, null=True)
     city = models.CharField(max_length=200, null=True)
     state = models.CharField(max_length=200, null=True)
     zipcode = models.CharField(max_length=200, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+    country = models.CharField(max_length=200, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Shipping Addresses'
 
     def __str__(self):
-        if self.address:
-            return self.address
-        else:
-            return f"ShippingAddress #{self.id} (No address provided)"
+        return f"{self.full_name}'s Shipping Address"  # updated to reflect full_name

@@ -20,4 +20,7 @@ urlpatterns = [
     path('store/', views.store, name='store'),
     path('search/', views.search_view, name='search'),
     path('category/<str:cat>', views.category, name='category'),
+    path('shipping/', views.shipping_info, name='shipping'),
+    path('place_order/', views.place_order, name='place_order'),
+    path('order_summary/<int:order_id>/', views.order_summary, name='order_summary'),
 ]

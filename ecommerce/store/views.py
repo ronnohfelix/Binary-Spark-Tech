@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Q
+from .forms import ShippingForm
 
 def category(request, cat):
     cat = cat.replace('-', ' ')
@@ -191,6 +192,8 @@ def search_view(request):
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
+    #add related products
+    related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[:4]
     
     # Retrieve cart data using your cartData function or method
     data = cartData(request)
@@ -201,6 +204,71 @@ def product_detail(request, product_id):
     context = {
         'product': product,
         'cartItems': cartItems,
+        'related_products': related_products
     }
     
     return render(request, 'store/product_detail.html', context)
+
+
+
+@login_required(login_url='login')
+def shipping_info(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+        data = cartData(request)
+        cartItems = data['cartItems']
+    except Customer.DoesNotExist:
+        messages.error(request, 'Customer profile does not exist.')
+        return redirect('store')
+
+    shipping_address, created = ShippingAddress.objects.get_or_create(customer=customer)
+    if request.method == 'POST':
+        shipping_form = ShippingForm(request.POST, instance=shipping_address)
+        if shipping_form.is_valid():
+            shipping_form.save()
+            messages.success(request, 'Shipping information added successfully.')
+            return redirect('checkout')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        shipping_form = ShippingForm(instance=shipping_address)
+
+    return render(request, 'store/shipping_address.html', {'shipping_form': shipping_form, 'cartItems': cartItems})
+
+
+@login_required
+def place_order(request):
+    customer = Customer.objects.get(user=request.user)
+    order = Order.objects.get(customer=customer, complete=False)
+    data = cartData(request)
+    cartItems = data['cartItems']
+    
+    # Check if cart is empty
+    if cartItems == 0:
+        # Add a message to inform the user that their cart is empty
+        messages.warning(request, "Your cart is empty.")
+        # Redirect back to the cart page
+        return redirect('cart')
+
+    # Mark the order as complete
+    order.complete = True
+    order.save()
+
+    # Update in_cart status of order items
+    order_items = OrderItem.objects.filter(order=order)
+    for order_item in order_items:
+        order_item.in_cart = False
+        order_item.save()
+
+    # Redirect to order summary page with cart items data
+    return redirect('order_summary', order_id=order.id)
+
+
+
+@login_required
+def order_summary(request, order_id):
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = Order.objects.get(id=order_id)
+    context = {'order': order, 'cartItems': cartItems}
+    return render(request, 'store/order_summary.html', context)

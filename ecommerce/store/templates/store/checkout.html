@@ -97,7 +97,7 @@
 
 				<h5>Items:   {{order.get_cart_items}}</h5>
 				<h5>Total:   Ksh. {{order.get_cart_total | floatformat:2}}</h5>
-                <a  class="btn btn-outline-dark" href="{% url 'account' %}">Confirm Details</a>
+                <a  class="btn btn-outline-dark" href="{% url 'place_order' %}">Place Order</a>
 			</div>
 		</div>
 	</div>

@@ -1,33 +1,23 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-
 <head>
     <title>Binary Spark Tech</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <script type="text/javascript">
         var user = '{{request.user}}';
-
         function getToken(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
                 var cookies = document.cookie.split(';');
                 for (var i = 0; i < cookies.length; i++) {
                     var cookie = cookies[i].trim();
-
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
@@ -37,119 +27,98 @@
             return cookieValue;
         }
         var csrftoken = getToken('csrftoken');
-
         function getCookie(name) {
             var cookieArr = document.cookie.split(";");
-
             for (var i = 0; i < cookieArr.length; i++) {
                 var cookiePair = cookieArr[i].split("=");
-
                 if (name == cookiePair[0].trim()) {
                     return decodeURIComponent(cookiePair[1]);
                 }
             }
-
             return null;
         }
-
         var cart = JSON.parse(getCookie('cart'));
         if (cart == undefined) {
             cart = {};
             console.log('Cart created!');
             document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/";
         }
-
         console.log('Cart:', cart);
     </script>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'category' 'Hot-Deals' %}">Binary Spark Tech</a>
-
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!--<div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-toggle="dropdown" aria-expanded="false">Categories</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url 'store' %}">All Products</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{% url 'category' 'Programming-Books' %}">Programming Books</a>
-                        <a class="dropdown-item" href="{% url 'category' 'Marketing-Books' %}">Marketing Books</a>
-                    </div>
-                </li>
-            </ul>-->
-            <div class="boxContainer">
-                <table class="elementsContainer">
-                    <tr>
-                        <td>
-                            <form id="searchForm" action="{% url 'search' %}" method="GET">
-                                <input type="text" name="q" placeholder="Search products, brands and categories here" class="search">
-                            </form>
-                        </td>
-                        <td>
-                            <a href="#" id="searchIcon"><i class="material-icons">search</i></a>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="form-inline my-2 my-lg-0">
-                {% if not request.user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn btn-warning login">LOGIN</a>
-                <a href="{% url 'register' %}" class="btn btn-warning register">REGISTER</a>
-                {% else %}
-                <a class="hello-msg" href="{% url 'account' %}">
-                    <strong><i class="fas fa-user"></i></strong>
-                </a>
-                {% endif %}
-                <a href="{% url 'cart' %}">
-                    <img id="cart-icon" src="{% static 'images/cart.png' %}">
-                </a>
-                <p id="cart-total">{{ cartItems }}</p>
-            </div>
+        <div class="boxContainer">
+            <table class="elementsContainer">
+                <tr>
+                    <td>
+                        <form id="searchForm" action="{% url 'search' %}" method="GET">
+                            <input type="text" name="q" placeholder="Search products, brands and categories here" class="search">
+                        </form>
+                    </td>
+                    <td>
+                        <a href="#" id="searchIcon"><i class="material-icons">search</i></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="form-inline my-2 my-lg-0">
+            {% if not request.user.is_authenticated %}
+            <a href="{% url 'login' %}" class="btn btn-warning login">LOGIN</a>
+            <a href="{% url 'register' %}" class="btn btn-warning register">REGISTER</a>
+            {% else %}
+            <a class="hello-msg" href="{% url 'account' %}">
+                <strong><i class="fas fa-user"></i></strong>
+            </a>
+            {% endif %}
+            <a href="{% url 'cart' %}">
+                <img id="cart-icon" src="{% static 'images/cart.png' %}">
+            </a>
+            <p id="cart-total">{{ cartItems }}</p>
         </div>
     </nav>
     {% block nav %}
-
     <nav class="new">
         <div class="mynav">
-                <ul>
-                    <li>
-                        <a class="link" href="{% url 'category' 'Hot-Deals' %}">Hot Deals</a>
-                    </li>
-                    <li>
-                        <a class="link" href="{% url 'category' 'Appliances' %}">Appliances</a>
-                    </li>
-                    <li>
-                        <a class="link" href="{% url 'category' 'Camera-and-Surveillance' %}">Camera and Surveillance</a>
-                    </li>
-                    <li>
-                        <a class="link" href="{% url 'category' 'Laptops' %}">Laptops</a>
-                    </li>
-                    <li>
-                        <a class="link" href="{% url 'category' 'Phones-and-Tablets' %}">Phones and Tablets</a>
-                    </li>
-                    <li>
-                        <a class="link" href="{% url 'category' 'TVs-and-Audio' %}">TVs and Audio</a>
-                    </li>
-                    <!-- Add more categories here -->
-                </ul>
+            <ul>
+                <li>
+                    <a class="link" href="{% url 'category' 'Hot-Deals' %}">Hot Deals</a>
+                </li>
+                <li>
+                    <a class="link" href="{% url 'category' 'Appliances' %}">Appliances</a>
+                </li>
+                <li>
+                    <a class="link" href="{% url 'category' 'Camera-and-Surveillance' %}">Camera and Surveillance</a>
+                </li>
+                <li>
+                    <a class="link" href="{% url 'category' 'Laptops' %}">Laptops</a>
+                </li>
+                <li>
+                    <a class="link" href="{% url 'category' 'Phones-and-Tablets' %}">Phones and Tablets</a>
+                </li>
+                <li>
+                    <a class="link" href="{% url 'category' 'TVs-and-Audio' %}">TVs and Audio</a>
+                </li>
+            </ul>
         </div>
     </nav>
     {% endblock nav %}
-
     <div class="container">
         <!-- Display messages -->
         {% if messages %}
-        <div class="alert alert-success" role="alert">
+        <div id="message-container">
             {% for message in messages %}
-            <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
@@ -157,16 +126,13 @@
         {% block content %}
         {% endblock content %}
     </div>
-
     <style>
-        /* Styles for normal screens (larger than 880px) */
         @media (min-width: 881px) {
             .form-inline {
                 margin-left: auto;
                 display: flex;
                 align-items: center;
             }
-
             .login,
             .register,
             #cart-icon,
@@ -174,7 +140,6 @@
                 margin-left: 10px;
                 font-size: 1.5em;
             }
-
             #cart-icon {
                 width: 24px;
                 height: 24px;
@@ -183,13 +148,11 @@
                 display: none;
             }
         }
-
         @media (max-width: 1400px) {
             .navbar-brand {
                 margin-top: 10px;
                 font-size: 0.9em;
             }
-
             .navbar .form-inline {
                 position: absolute;
                 right: 10px;
@@ -199,28 +162,23 @@
                 justify-content: flex-end;
                 margin-right: 10px;
             }
-
             .navbar-toggler {
                 display: none;
             }
-
             #cart-icon {
                 width: 20px;
                 height: 20px;
                 margin-left: 10px;
             }
-
             #cart-total {
                 margin-left: 5px;
                 font-size: 0.8em;
             }
-
             .hello-msg {
                 margin-left: 10px;
                 font-size: 1.5em;
             }
         }
-
         .login,
         .register {
             margin-left: 10px;
@@ -273,26 +231,21 @@
                         font-weight: bold;
                         font-size: 1.1em;
                     }
-
                     .whatsapp-link i {
                         margin-right: 0.5em;
                     }
-
                     .whatsapp-link:hover {
                         text-decoration: none;
                         color: #25D366;
                     }
-
                     @media (max-width: 880px) {
                         .whatsapp-link {
                             font-size: 1.5em;
                             display: block;
                         }
-
                         .whatsapp-link i {
                             font-size: 1.5em;
                         }
-
                         .whatsapp-link i {
                             margin-right: 0.3em;
                         }
@@ -307,11 +260,9 @@
                 electronics. As a leading e-commerce electronics distributor, we offer a wide range of innovative
                 products, from smart home devices to entertainment systems, designed to bring convenience and excitement
                 to your everyday life.
-
                 Elevate your security with our cutting-edge CCTV and alarm systems. We believe in providing you with
                 peace of mind by offering the latest technology in surveillance and security solutions. Our expert team
                 is committed to delivering exceptional service and reliable products you can trust.
-
                 Join the Binary Spark Tech community today and experience the future of electronics shopping. Let us be
                 your trusted partner in modernizing your home and keeping it secure.
             </p>
@@ -320,20 +271,15 @@
         </div>
     </footer>
     {% endblock footer %}
-
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 </body>
-
 </html>
